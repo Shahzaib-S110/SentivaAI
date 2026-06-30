@@ -4,7 +4,7 @@ from predictor import predict_sentiment
 import pandas as pd
 import os
 
-st.title("📊 RaayeAI Dashboard")
+st.title("📊 SentivaAI Dashboard")
 
 # -----------------------------
 # Banner (optional)
