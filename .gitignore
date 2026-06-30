@@ -1,0 +1,30 @@
+# Virtual Environment
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+
+# VS Code
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Model checkpoints (if stored locally)
+*.pt
+*.pth
+*.bin
+
+v2_mBERT/model/
+*.safetensors
+*.bin
+*.pt
+*.pth
+
+
+# Streamlit cache
+.streamlit/
+
+# History file
+**/history.csv
