@@ -1,7 +1,8 @@
 # 🛍️ SentivaAI
 ### AI-Powered Roman Urdu Product Review Sentiment Analyzer
 
-🔗 **Live Demo:** https://your-streamlit-app.streamlit.app
+🔗 **Live Demo:** https://sentiva-ai.streamlit.app/
+**Live Demo:** https://huggingface.co/Shahzaib110/finetune_mBERT
 
 ---
 
