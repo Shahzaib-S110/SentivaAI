@@ -7,6 +7,8 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 from preprocessing import preprocess
 from config import MODEL_DIR, DEVICE, MAX_LENGTH, LABELS, LABEL_ICONS
+from config import MODEL_NAME
+
 
 # ----------------------------------------------------
 # Load Model (runs once when app starts)
@@ -14,9 +16,9 @@ from config import MODEL_DIR, DEVICE, MAX_LENGTH, LABELS, LABEL_ICONS
 
 print("Loading mBERT model...")
 
-tokenizer = AutoTokenizer.from_pretrained(MODEL_DIR)
 
-model = AutoModelForSequenceClassification.from_pretrained(MODEL_DIR)
+tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME)
 
 model.to(DEVICE)
 model.eval()
