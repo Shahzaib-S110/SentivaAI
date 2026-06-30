@@ -11,20 +11,18 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
 
+# Hugging Face Model Repository
 MODEL_NAME = "Shahzaib110/finetune_mBERT"
+
 # ---------------------------------------------------
 # Device
 # ---------------------------------------------------
 
-DEVICE = torch.device(
-    "cuda" if torch.cuda.is_available() else "cpu"
-)
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # ---------------------------------------------------
-# Model
+# Model Settings
 # ---------------------------------------------------
-
-MODEL_NAME = "Sentiva AI mBERT"
 
 MAX_LENGTH = 256
 
@@ -45,9 +43,9 @@ LABEL_ICONS = {
 }
 
 LABEL_COLORS = {
-    0: "#ff4b4b",
-    1: "#ffcc00",
-    2: "#00c853"
+    0: "#ff4b4b",   # Negative
+    1: "#ffcc00",   # Neutral
+    2: "#00c853"    # Positive
 }
 
 # ---------------------------------------------------
@@ -55,10 +53,9 @@ LABEL_COLORS = {
 # ---------------------------------------------------
 
 SELLER_ACTIONS = {
-
     "Negative": [
         "Contact the customer immediately.",
-        "Offer refund or replacement.",
+        "Offer a refund or replacement.",
         "Investigate product quality.",
         "Improve packaging.",
         "Respond professionally."

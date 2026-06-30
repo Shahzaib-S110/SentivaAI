@@ -3,38 +3,44 @@ Prediction module for Sentiva AI (mBERT-based)
 """
 
 import torch
+import streamlit as st
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 from preprocessing import preprocess
-from config import MODEL_DIR, DEVICE, MAX_LENGTH, LABELS, LABEL_ICONS
-from config import MODEL_NAME
-
+from config import (
+    MODEL_NAME,
+    DEVICE,
+    MAX_LENGTH,
+    LABELS,
+    LABEL_ICONS,
+)
 
 # ----------------------------------------------------
-# Load Model (runs once when app starts)
+# Load Model (cached)
 # ----------------------------------------------------
 
-print("Loading mBERT model...")
+@st.cache_resource
+def load_model():
+    print("Loading mBERT model from Hugging Face...")
+
+    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+    model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME)
+
+    model.to(DEVICE)
+    model.eval()
+
+    print("Model loaded successfully.")
+
+    return tokenizer, model
 
 
-tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME)
-
-model.to(DEVICE)
-model.eval()
-
-print("Model Loaded Successfully.")
+tokenizer, model = load_model()
 
 # ----------------------------------------------------
 # Single Prediction
 # ----------------------------------------------------
 
 def predict_sentiment(review: str):
-    """
-    Returns:
-    label (str), confidence (float)
-    """
-
     clean_review = preprocess(review)
 
     inputs = tokenizer(
@@ -42,17 +48,15 @@ def predict_sentiment(review: str):
         return_tensors="pt",
         truncation=True,
         padding="max_length",
-        max_length=MAX_LENGTH
+        max_length=MAX_LENGTH,
     )
 
-    # move to device
     inputs = {k: v.to(DEVICE) for k, v in inputs.items()}
 
     with torch.no_grad():
         outputs = model(**inputs)
 
         probabilities = torch.softmax(outputs.logits, dim=1)[0]
-
         prediction_id = torch.argmax(outputs.logits, dim=1).item()
 
     label = LABELS[prediction_id]
@@ -62,14 +66,10 @@ def predict_sentiment(review: str):
 
 
 # ----------------------------------------------------
-# Detailed Prediction (optional advanced use)
+# Detailed Prediction
 # ----------------------------------------------------
 
 def predict_sentiment_full(review: str):
-    """
-    Returns full breakdown (for dashboard analytics)
-    """
-
     clean_review = preprocess(review)
 
     inputs = tokenizer(
@@ -77,13 +77,14 @@ def predict_sentiment_full(review: str):
         return_tensors="pt",
         truncation=True,
         padding="max_length",
-        max_length=MAX_LENGTH
+        max_length=MAX_LENGTH,
     )
 
     inputs = {k: v.to(DEVICE) for k, v in inputs.items()}
 
     with torch.no_grad():
         outputs = model(**inputs)
+
         probabilities = torch.softmax(outputs.logits, dim=1)[0]
         prediction_id = torch.argmax(outputs.logits, dim=1).item()
 
@@ -105,7 +106,4 @@ def predict_sentiment_full(review: str):
 # ----------------------------------------------------
 
 def predict_batch(reviews):
-    """
-    Predict multiple reviews at once
-    """
-    return [predict_sentiment_full(r) for r in reviews]
+    return [predict_sentiment_full(review) for review in reviews]
